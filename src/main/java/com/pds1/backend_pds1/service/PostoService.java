@@ -32,7 +32,7 @@ public class PostoService {
   @Transactional
   public PostoModel savePosto(PostoRecordDto postooRecordDto) {
     PostoModel posto = new PostoModel();
-    posto.setNome(postooRecordDto.nome());
+    posto.setRazaoSocial(postooRecordDto.razaoSocial());
 
     return postoRepository.save(posto);
   }
