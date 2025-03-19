@@ -1,5 +1,6 @@
 package com.pds1.backend_pds1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -23,6 +24,10 @@ public class DistribuidorModel implements Serializable {
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @OneToMany(mappedBy = "distribuidor", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<PostoModel> postos = new HashSet<>();
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "distribuidor", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<CombustivelModel> combustiveis = new HashSet<>();
 
   public UUID getId() {
     return id;

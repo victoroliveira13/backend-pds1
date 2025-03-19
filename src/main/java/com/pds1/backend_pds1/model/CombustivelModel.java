@@ -30,6 +30,10 @@ public class CombustivelModel implements Serializable {
   )
   private Set<PostoModel> postos = new HashSet<>();
 
+  @ManyToOne
+  @JoinColumn(name = "distribuidor_id", nullable = false)
+  private DistribuidorModel distribuidor;
+
   public UUID getId() {
     return id;
   }
