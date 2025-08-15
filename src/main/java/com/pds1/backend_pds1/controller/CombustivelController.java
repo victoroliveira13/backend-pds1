@@ -1,9 +1,7 @@
 package com.pds1.backend_pds1.controller;
 
 import com.pds1.backend_pds1.dtos.CombustivelRecordDto;
-import com.pds1.backend_pds1.dtos.PostoRecordDto;
 import com.pds1.backend_pds1.model.CombustivelModel;
-import com.pds1.backend_pds1.model.PostoModel;
 import com.pds1.backend_pds1.service.CombustivelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

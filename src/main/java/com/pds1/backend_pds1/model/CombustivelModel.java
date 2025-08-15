@@ -1,9 +1,7 @@
 package com.pds1.backend_pds1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,32 +20,24 @@ public class CombustivelModel implements Serializable {
   private String tipo;
 
   @JsonIgnore
-  @ManyToMany
-  @JoinTable(
-      name = "COMBUSTIVEL_POSTO",
-      joinColumns = @JoinColumn(name = "combustivel_id"),
-      inverseJoinColumns = @JoinColumn(name = "posto_id")
-  )
-  private Set<PostoModel> postos = new HashSet<>();
+  @OneToMany(mappedBy = "combustivel", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<CombustivelPostoModel> postos = new HashSet<>();
 
   @ManyToOne
   @JoinColumn(name = "distribuidor_id", nullable = false)
   private DistribuidorModel distribuidor;
 
+  // 1. Adicionado construtor vazio obrigatório para o JPA
+  public CombustivelModel() {
+  }
+
+  // Getters e Setters corrigidos
   public UUID getId() {
     return id;
   }
 
   public void setId(UUID id) {
     this.id = id;
-  }
-
-  public String getNome() {
-    return tipo;
-  }
-
-  public void setNome(String nome) {
-    this.tipo = nome;
   }
 
   public String getTipo() {
@@ -58,11 +48,19 @@ public class CombustivelModel implements Serializable {
     this.tipo = tipo;
   }
 
-  public Set<PostoModel> getPostos() {
+  public Set<CombustivelPostoModel> getPostos() {
     return postos;
   }
 
-  public void setPostos(Set<PostoModel> postos) {
+  public void setPostos(Set<CombustivelPostoModel> postos) {
     this.postos = postos;
+  }
+
+  public DistribuidorModel getDistribuidor() {
+    return distribuidor;
+  }
+
+  public void setDistribuidor(DistribuidorModel distribuidor) {
+    this.distribuidor = distribuidor;
   }
 }

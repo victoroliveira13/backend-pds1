@@ -6,6 +6,8 @@ import com.pds1.backend_pds1.model.CombustivelModel;
 import com.pds1.backend_pds1.model.PostoModel;
 import com.pds1.backend_pds1.repository.CombustivelRepository;
 
+import com.pds1.backend_pds1.repository.DistribuidorRepository;
+import com.pds1.backend_pds1.repository.PostoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +19,11 @@ public class CombustivelService {
 
   private final CombustivelRepository combustivelRepository;
 
-  public CombustivelService(CombustivelRepository combustivelRepository) {
+  private final DistribuidorRepository distribuidorRepository;
+
+  public CombustivelService(CombustivelRepository combustivelRepository, DistribuidorRepository distribuidorRepository) {
     this.combustivelRepository = combustivelRepository;
+    this.distribuidorRepository = distribuidorRepository;
   }
 
   public List<CombustivelModel> listAllCombustiveis() {
@@ -34,10 +39,15 @@ public class CombustivelService {
 
   @Transactional
   public CombustivelModel saveCombustivel(CombustivelRecordDto combustivelRecordDto) {
+    var distribuidor = distribuidorRepository.findById(combustivelRecordDto.distribuidor_id())
+        .orElseThrow(() -> new RuntimeException("Distribuidor não encontrado"));
+
     CombustivelModel combustivel = new CombustivelModel();
-    combustivel.setNome(combustivelRecordDto.tipo());
+    combustivel.setTipo(combustivelRecordDto.tipo());
+    combustivel.setDistribuidor(distribuidor);
 
     return combustivelRepository.save(combustivel);
   }
+
 
 }

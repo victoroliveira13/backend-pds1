@@ -1,7 +1,6 @@
 package com.pds1.backend_pds1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -27,9 +26,8 @@ public class PostoModel implements Serializable {
   private EnderecoModel endereco;
 
   @JsonIgnore
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  @ManyToMany(mappedBy = "postos", fetch = FetchType.LAZY)
-  private Set<CombustivelModel> combustiveis = new HashSet<>();
+  @OneToMany(mappedBy = "posto", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<CombustivelPostoModel> combustiveis = new HashSet<>();
 
   @Column(nullable = false)
   private String razaoSocial;
@@ -88,11 +86,11 @@ public class PostoModel implements Serializable {
     this.endereco = endereco;
   }
 
-  public Set<CombustivelModel> getCombustiveis() {
+  public Set<CombustivelPostoModel> getCombustiveis() {
     return combustiveis;
   }
 
-  public void setCombustiveis(Set<CombustivelModel> combustiveis) {
+  public void setCombustiveis(Set<CombustivelPostoModel> combustiveis) {
     this.combustiveis = combustiveis;
   }
 }

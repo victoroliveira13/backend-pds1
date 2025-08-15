@@ -29,6 +29,12 @@ public class SecurityConfigurations {
         .authorizeHttpRequests(authorize-> authorize.
             requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
               .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()//hasRole
+              .requestMatchers(HttpMethod.GET, "/posto").permitAll()
+              .requestMatchers(HttpMethod.GET, "/distribuidor").permitAll()
+              .requestMatchers(HttpMethod.GET, "/combustivel").permitAll()
+              .requestMatchers(HttpMethod.POST, "/combustivel").permitAll()
+              .requestMatchers(HttpMethod.GET, "/combustivelPosto/**").permitAll()
+              .requestMatchers(HttpMethod.POST, "/combustivelPosto").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
