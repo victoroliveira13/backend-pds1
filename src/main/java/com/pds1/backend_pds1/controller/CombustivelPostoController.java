@@ -1,6 +1,7 @@
 package com.pds1.backend_pds1.controller;
 
 import com.pds1.backend_pds1.dtos.CombustivelPostoRecordDto;
+import com.pds1.backend_pds1.dtos.UpdatePrecoCombustivelDto;
 import com.pds1.backend_pds1.dtos.response.CombustivelPostoResponseDto;
 import com.pds1.backend_pds1.service.CombustivelPostoService;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,12 @@ public class CombustivelPostoController {
   @GetMapping("/media/{combustivelId}")
   public ResponseEntity<Double> getMediaCombustivel(@PathVariable UUID combustivelId) {
     return ResponseEntity.ok(combustivelPostoService.getMediaPrecoByCombustivel(combustivelId));
+  }
+
+  @PutMapping("/preco")
+  public ResponseEntity<CombustivelPostoResponseDto> updatePrecoCombustivel(@RequestBody UpdatePrecoCombustivelDto dto) {
+    CombustivelPostoResponseDto updated = combustivelPostoService.updatePrecoCombustivel(dto);
+    return ResponseEntity.ok(updated);
   }
 
 }

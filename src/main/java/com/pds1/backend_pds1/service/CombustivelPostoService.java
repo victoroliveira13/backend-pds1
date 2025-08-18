@@ -1,6 +1,7 @@
 package com.pds1.backend_pds1.service;
 
 import com.pds1.backend_pds1.dtos.CombustivelPostoRecordDto;
+import com.pds1.backend_pds1.dtos.UpdatePrecoCombustivelDto;
 import com.pds1.backend_pds1.dtos.response.CombustivelPostoResponseDto;
 import com.pds1.backend_pds1.model.CombustivelModel;
 import com.pds1.backend_pds1.model.CombustivelPostoModel;
@@ -8,6 +9,7 @@ import com.pds1.backend_pds1.model.PostoModel;
 import com.pds1.backend_pds1.repository.CombustivelPostoRepository;
 import com.pds1.backend_pds1.repository.CombustivelRepository;
 import com.pds1.backend_pds1.repository.PostoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -138,6 +140,40 @@ public class CombustivelPostoService {
         .mapToDouble(cp -> cp.getPreco().doubleValue())
         .average()
         .orElse(0.0);
+  }
+
+  @Transactional
+  public CombustivelPostoResponseDto updatePrecoCombustivel(UpdatePrecoCombustivelDto dto) {
+    // Busca o registro específico
+    var registro = combustivelPostoRepository
+        .findByPostoIdAndCombustivelId(dto.postoId(), dto.combustivelId())
+        .orElseThrow(() -> new RuntimeException("Combustível não encontrado neste posto"));
+
+    // Atualiza o preço
+    registro.setPreco(dto.novoPreco());
+    combustivelPostoRepository.save(registro);
+
+    // Recupera todos os combustíveis do posto para montar o DTO completo
+    List<CombustivelPostoResponseDto.Combustivel> combustiveis = combustivelPostoRepository
+        .findByPostoId(dto.postoId())
+        .stream()
+        .map(c -> new CombustivelPostoResponseDto.Combustivel(
+            c.getCombustivel().getId(),
+            c.getCombustivel().getTipo(),
+            c.getPreco()
+        ))
+        .toList();
+
+    var posto = registro.getPosto();
+
+    return new CombustivelPostoResponseDto(
+        posto.getId(),
+        posto.getRazaoSocial(),
+        posto.getEndereco().getLogradouro(),
+        posto.getNumeroEndereco(),
+        posto.getEndereco().getCidade(),
+        combustiveis
+    );
   }
 
 }
