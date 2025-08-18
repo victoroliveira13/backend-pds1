@@ -36,7 +36,6 @@ public class CombustivelPostoController {
     return ResponseEntity.ok(dtos);
   }
 
-
   @PostMapping
   public ResponseEntity<CombustivelPostoResponseDto> saveCombustivelPosto(@RequestBody CombustivelPostoRecordDto dto) {
     CombustivelPostoResponseDto response = combustivelPostoService.saveCombustivelPosto(dto);

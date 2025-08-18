@@ -35,6 +35,7 @@ public class SecurityConfigurations {
               .requestMatchers(HttpMethod.POST, "/combustivel").permitAll()
               .requestMatchers(HttpMethod.GET, "/combustivelPosto/**").permitAll()
               .requestMatchers(HttpMethod.POST, "/combustivelPosto").permitAll()
+              .requestMatchers(HttpMethod.GET, "/historico/**").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
