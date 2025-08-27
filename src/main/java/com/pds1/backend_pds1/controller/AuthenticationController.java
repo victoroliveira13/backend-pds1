@@ -36,7 +36,7 @@ public class AuthenticationController {
     var usuario = (UsuarioModel) auth.getPrincipal();
     var token = tokenService.generateToken(usuario);
 
-    return ResponseEntity.ok(new LoginDto(token, usuario.getNome(), usuario.getRole(), usuario.getId()));
+    return ResponseEntity.ok(new LoginDto(token, usuario.getNome(), usuario.getEmail(), usuario.getRole(), usuario.getId()));
   }
 
 
@@ -47,7 +47,7 @@ public class AuthenticationController {
     }
 
     String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
-    UsuarioModel usuario = new UsuarioModel(data.nome(), data.login(), encryptedPassword, data.role());
+    UsuarioModel usuario = new UsuarioModel(data.nome(), data.login(), encryptedPassword, data.email(), data.role());
 
     this.usuarioRepository.save(usuario);
     return ResponseEntity.ok().build();

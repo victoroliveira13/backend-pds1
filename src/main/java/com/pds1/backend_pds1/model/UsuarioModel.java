@@ -18,10 +18,11 @@ public class UsuarioModel implements UserDetails {
   public UsuarioModel() {
 
   }
-  public UsuarioModel(String nome, String login, String encryptedPassword, UserRole role) {
+  public UsuarioModel(String nome, String login, String encryptedPassword, String email, UserRole role) {
     this.nome = nome;
     this.login = login;
     this.senha = encryptedPassword;
+    this.email = email;
     this.role = role;
   }
 
@@ -43,6 +44,9 @@ public class UsuarioModel implements UserDetails {
   private String senha;
 
   @Column
+  private String email;
+
+  @Column
   private UserRole role;
 
   public UUID getId() {
@@ -59,6 +63,10 @@ public class UsuarioModel implements UserDetails {
 
   public void setNome(String nome) {
     this.nome = nome;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public String getLogin() {
@@ -92,6 +100,10 @@ public class UsuarioModel implements UserDetails {
   @Override
   public String getUsername() {
     return login;
+  }
+
+  public String getEmail() {
+    return email;
   }
 
   @Override
