@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
@@ -29,14 +32,27 @@ public class AuthenticationController {
   private TokenService tokenService;
 
   @PostMapping("/login")
-  public ResponseEntity<LoginDto> login(@RequestBody AuthenticationDto data) {
-    var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
-    var auth = this.authenticationManager.authenticate(usernamePassword);
+  public ResponseEntity<?> login(@RequestBody AuthenticationDto data) {
+    try {
+      var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.senha());
+      var auth = this.authenticationManager.authenticate(usernamePassword);
 
-    var usuario = (UsuarioModel) auth.getPrincipal();
-    var token = tokenService.generateToken(usuario);
+      var usuario = (UsuarioModel) auth.getPrincipal();
+      var token = tokenService.generateToken(usuario);
 
-    return ResponseEntity.ok(new LoginDto(token, usuario.getNome(), usuario.getEmail(), usuario.getRole(), usuario.getId()));
+      return ResponseEntity.ok(new LoginDto(token, usuario.getNome(), usuario.getEmail(), usuario.getRole(), usuario.getId()));
+
+    } catch (org.springframework.security.authentication.BadCredentialsException |
+             org.springframework.security.authentication.InternalAuthenticationServiceException ex) {
+
+      Map<String, Object> body = new HashMap<>();
+      body.put("timestamp", java.time.LocalDateTime.now().toString());
+      body.put("status", 401);
+      body.put("error", "Unauthorized");
+      body.put("message", "Usuário inexistente ou senha inválida");
+
+      return ResponseEntity.status(401).body(body);
+    }
   }
 
 
