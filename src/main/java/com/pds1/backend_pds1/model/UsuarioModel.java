@@ -2,6 +2,8 @@ package com.pds1.backend_pds1.model;
 
 import com.pds1.backend_pds1.roles.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,9 +17,8 @@ import java.util.UUID;
 public class UsuarioModel implements UserDetails {
   private static final long serialVersionUID = 1L;
 
-  public UsuarioModel() {
+  public UsuarioModel() {}
 
-  }
   public UsuarioModel(String nome, String login, String encryptedPassword, String email, UserRole role) {
     this.nome = nome;
     this.login = login;
@@ -30,6 +31,7 @@ public class UsuarioModel implements UserDetails {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
+  @NotBlank(message = "Nome é obrigatório")
   @Column(nullable = false)
   private String nome;
 
@@ -37,17 +39,21 @@ public class UsuarioModel implements UserDetails {
   @JoinColumn(name = "endereco_id", nullable = true)
   private EnderecoModel endereco;
 
-  @Column
+  @NotBlank(message = "Login é obrigatório")
+  @Column(nullable = false, unique = true)
   private String login;
 
-  @Column
+  @NotBlank(message = "Senha é obrigatória")
+  @Column(nullable = false)
   private String senha;
 
-  @Column
+  @NotBlank(message = "Email é obrigatório")
+  @Email(message = "Email inválido")
+  @Column(nullable = false, unique = true)
   private String email;
 
-  @Column
   private UserRole role;
+
 
   public UUID getId() {
     return id;
@@ -87,8 +93,11 @@ public class UsuarioModel implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    if(this.role == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
-        new SimpleGrantedAuthority("ROLE_USER"));
+    if(this.role == UserRole.ADMIN)
+      return List.of(
+          new SimpleGrantedAuthority("ROLE_ADMIN"),
+          new SimpleGrantedAuthority("ROLE_USER")
+      );
     return List.of(new SimpleGrantedAuthority("ROLE_USER"));
   }
 

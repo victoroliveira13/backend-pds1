@@ -4,6 +4,7 @@ package com.pds1.backend_pds1.controller;
 import com.pds1.backend_pds1.dtos.UsuarioRecordDto;
 import com.pds1.backend_pds1.model.UsuarioModel;
 import com.pds1.backend_pds1.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +35,11 @@ public class UsuarioController {
   }
 
   @PostMapping
-  public ResponseEntity<UsuarioModel> savePessoa(@RequestBody UsuarioRecordDto usuarioRecordDto) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.saveUsuario(usuarioRecordDto));
+  public ResponseEntity<UsuarioModel> savePessoa(@RequestBody @Valid UsuarioRecordDto usuarioRecordDto) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(usuarioService.saveUsuario(usuarioRecordDto));
   }
+
 
   @PutMapping("/{id}")
   public ResponseEntity<UsuarioModel> updateUsuario(
